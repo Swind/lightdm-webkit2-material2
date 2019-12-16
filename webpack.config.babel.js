@@ -57,111 +57,104 @@ const config = {
 
     module: {
         rules: [{
-                enforce: 'pre',
-                test: /\.jsx?$/,
-                exclude: [/src\//, /node_modules\/intl-/],
-                loader: 'source-map-loader'
-            },
-            {
-                test: /\.(xml|html|txt|md)$/,
-                loader: 'happypack/loader?id=raw'
-            }, {
-                //     test: /\.(jpe?g|png|gif|svg)$/i,
-                //     loader: 'happypack/loader?id=image'
-                // }, {
-                test: /\.css$/,
-                loader: "happypack/loader?id=css"
-            }, {
-                test: /\.less$/,
-                loader: "happypack/loader?id=less"
-            }, {
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                loader: 'happypack/loader?id=jsx'
-                // }, {
-                //     test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                //     loader: "happypack/loader?id=woff"
-            }, {
-                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "happypack/loader?id=file"
-                // }, {
-                //     test: /\.(xml|html|txt|md)$/,
-                //     loader: 'raw-loader'
-            }, {
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                loaders: [
-                    'file-loader?hash=sha512&digest=hex&name=static/[name].[ext]?[hash]',
-                    {
-                        loader: 'image-webpack-loader',
-                        query: imageLoaderSettings
-                    }
-                ]
-                // }, {
-                //     test: /\.css$/,
-                //     loader: "style-loader!css-loader"
-                // }, {
-                //     test: /\.less$/,
-                //     loader: "style-loader!css-loader!less-loader"
-                // }, {
-                //     test: /\.jsx?$/,
-                //     exclude: /node_modules/,
-                //     loader: 'babel-loader'
-            }, {
-                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "url-loader?limit=10000&hash=sha512&digest=hex&name=static/[name].[ext]?[hash]"
-                // }, {
-                //     test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                //     loader: "file-loader?hash=sha512&digest=hex&name=static/[name].[ext]?[hash]"
-            }
+            enforce: 'pre',
+            test: /\.jsx?$/,
+            exclude: [/src\//, /node_modules\/intl-/],
+            loader: 'source-map-loader'
+        },
+        {
+            test: /\.(xml|html|txt|md)$/,
+            loader: 'happypack/loader?id=raw'
+        }, {
+            //     test: /\.(jpe?g|png|gif|svg)$/i,
+            //     loader: 'happypack/loader?id=image'
+            // }, {
+            test: /\.css$/,
+            loader: "happypack/loader?id=css"
+        }, {
+            test: /\.less$/,
+            loader: "happypack/loader?id=less"
+        }, {
+            test: /\.jsx?$/,
+            exclude: /node_modules/,
+            loader: 'happypack/loader?id=jsx'
+            // }, {
+            //     test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            //     loader: "happypack/loader?id=woff"
+        }, {
+            test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: "happypack/loader?id=file"
+            // }, {
+            //     test: /\.(xml|html|txt|md)$/,
+            //     loader: 'raw-loader'
+        }, {
+            test: /\.(gif|png|jpe?g|svg)$/i,
+            use: [
+                'file-loader',
+                {
+                    loader: 'image-webpack-loader',
+                    options: {
+                        bypassOnDebug: true, // webpack@1.x
+                        disable: true, // webpack@2.x and newer
+                    },
+                },
+            ],
+        }, {
+            test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: "url-loader?limit=10000&hash=sha512&digest=hex&name=static/[name].[ext]?[hash]"
+            // }, {
+            //     test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            //     loader: "file-loader?hash=sha512&digest=hex&name=static/[name].[ext]?[hash]"
+        }
         ]
     },
 
     plugins: ([
-            new HappyPack(Object.assign({}, happyPackSettings, {
-                id: 'raw',
-                loaders: ['raw-loader']
-            })),
-            new HappyPack(Object.assign({}, happyPackSettings, {
-                id: 'jsx',
-                loaders: ['babel-loader']
-            })),
-            new HappyPack(Object.assign({}, happyPackSettings, {
-                id: 'file',
-                loaders: ['file-loader?hash=sha512&digest=hex&name=static/[name].[ext]?[hash]'],
-            })),
-            new HappyPack(Object.assign({}, happyPackSettings, {
-                id: 'less',
-                loaders: ['style-loader!css-loader!less-loader']
-            })),
-            new HappyPack(Object.assign({}, happyPackSettings, {
-                id: 'css',
-                loaders: ['style-loader!css-loader']
-            })),
-            new HappyPack(Object.assign({}, happyPackSettings, {
-                id: 'image',
-                loaders: [
-                    'file-loader?hash=sha512&digest=hex&name=static/[name].[ext]?[hash]',
-                    {
-                        loader: 'image-webpack-loader',
-                        query: imageLoaderSettings
-                    }
-                ]
-            })),
-            new HappyPack(Object.assign({}, happyPackSettings, {
-                id: 'woff',
-                loaders: ['url-loader?limit=10000&hash=sha512&digest=hex&name=static/[name].[ext]?[hash]']
-            })),
-            new webpack.DefinePlugin({
-                // A common mistake is not stringifying the "production" string.
-                'process.env.NODE_ENV': JSON.stringify(ENV)
-            }),
-            new HtmlWebpackPlugin({
-                template: './index.html',
-                minify: {
-                    collapseWhitespace: true
+        new HappyPack(Object.assign({}, happyPackSettings, {
+            id: 'raw',
+            loaders: ['raw-loader']
+        })),
+        new HappyPack(Object.assign({}, happyPackSettings, {
+            id: 'jsx',
+            loaders: ['babel-loader']
+        })),
+        new HappyPack(Object.assign({}, happyPackSettings, {
+            id: 'file',
+            loaders: ['file-loader?hash=sha512&digest=hex&name=static/[name].[ext]?[hash]'],
+        })),
+        new HappyPack(Object.assign({}, happyPackSettings, {
+            id: 'less',
+            loaders: ['style-loader!css-loader!less-loader']
+        })),
+        new HappyPack(Object.assign({}, happyPackSettings, {
+            id: 'css',
+            loaders: ['style-loader!css-loader']
+        })),
+        new HappyPack(Object.assign({}, happyPackSettings, {
+            id: 'image',
+            loaders: [
+                'file-loader?hash=sha512&digest=hex&name=static/[name].[ext]?[hash]',
+                {
+                    loader: 'image-webpack-loader',
+                    query: imageLoaderSettings
                 }
-            }),
-        ])
+            ]
+        })),
+        new HappyPack(Object.assign({}, happyPackSettings, {
+            id: 'woff',
+            loaders: ['url-loader?limit=10000&hash=sha512&digest=hex&name=static/[name].[ext]?[hash]']
+        })),
+        new webpack.DefinePlugin({
+            // A common mistake is not stringifying the "production" string.
+            'process.env.NODE_ENV': JSON.stringify(ENV)
+        }),
+        new HtmlWebpackPlugin({
+            template: './index.html',
+            minify: {
+                collapseWhitespace: true
+            }
+        }),
+    ])
         .concat(ENV === 'production' ? [
             new webpack.optimize.UglifyJsPlugin({
                 sourceMap: false,
@@ -176,9 +169,9 @@ const config = {
                 hashFuncNames: ['sha256', 'sha384'],
             }),
         ] : [
-            new DashboardPlugin(),
-            new FriendlyErrorsWebpackPlugin(),
-        ]),
+                new DashboardPlugin(),
+                new FriendlyErrorsWebpackPlugin(),
+            ]),
 
     stats: {
         colors: true

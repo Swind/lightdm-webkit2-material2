@@ -8,7 +8,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 // Load mock if in development mode
-if (!lightdm && process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
     const LightDMMock = require("../LightDMMock/mock/LightDMMock.js");
     // const LightDMMock = require("../LightDMMock/src/LightDMMock.js");
     window.lightdm = new LightDMMock(true, 0, false);
